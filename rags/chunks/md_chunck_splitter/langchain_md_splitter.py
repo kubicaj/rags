@@ -1,6 +1,6 @@
 from langchain_text_splitters import MarkdownHeaderTextSplitter
 
-from rags.chunks.abstract_splitter import AbstractFileSplitter, RagDocument, FileChunk
+from rags.chunks.abstract_splitter import AbstractFileSplitter, FileChunk, RagDocument
 
 
 class LangChainMDFileSplitter(AbstractFileSplitter):

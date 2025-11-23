@@ -1,13 +1,7 @@
 import fitz
 import pymupdf
-import tiktoken
 
 from rags.chunks.abstract_splitter import AbstractFileSplitter, FileChunk, RagDocument
-
-MAX_BYTES = 40000
-MAX_TOKENS = 8000
-
-enc = tiktoken.encoding_for_model("gpt-4o-mini")
 
 
 class PdfFileSplitter(AbstractFileSplitter):

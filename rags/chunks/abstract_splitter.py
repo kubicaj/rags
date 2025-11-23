@@ -1,10 +1,11 @@
+import logging
 from abc import ABC, abstractmethod
 from copy import deepcopy
 from typing import Any, List
 
 import tiktoken
 
-from rags.chunks import global_settings
+from rags import global_settings
 
 
 class RagDocument:
@@ -82,6 +83,10 @@ class AbstractFileSplitter(ABC):
 
         self.token_limit = global_settings.TOKENS_LIMIT
         self.byte_limit = global_settings.BYTES_LIMIT
+
+        # create basic logger
+        self.logger = logging.getLogger(__name__)
+        logging.basicConfig(encoding='utf-8', level=logging.DEBUG)
 
         self.token_splitter = None
         if include_token_limit:
@@ -230,7 +235,7 @@ class AbstractFileSplitter(ABC):
         """
         return len(self.encoder.encode(text))
 
-    def create_chunks(self):
+    def create_chunks(self) -> List[FileChunk]:
         """
         Load and split the file into chunks.
 
@@ -248,5 +253,16 @@ class AbstractFileSplitter(ABC):
 
         # per each chunk print its metadata
         for chunk in list_of_chunks:
-            print(f"Chunk metadata: {chunk.metadata}")
+            self.logger.debug(f"Chunk metadata: {chunk.metadata}")
+
+        # calculate total chunks tokens and bytes
+        total_tokens = sum(chunk.metadata[self.NUM_TOKENS_KEY] for chunk in list_of_chunks)
+        total_bytes = sum(chunk.metadata[self.NUM_BYTES_KEY] for chunk in list_of_chunks)
+        self.logger.info(
+            f"====================================================================\n"
+            f"Summary for file: {self.path_to_file} \n"
+            f"    Total chunks created for file: {len(list_of_chunks)}, \n"
+            f"    Total tokens: {total_tokens}, \n"
+            f"    Total bytes: {total_bytes}\n"
+            f"====================================================================")
         return list_of_chunks

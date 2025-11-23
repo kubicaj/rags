@@ -1,9 +1,9 @@
 from typing import List
 
-from rags.chunks import global_settings
-from rags.chunks.abstract_splitter import AbstractTextSplitter, TextChunk
-
 from langchain_text_splitters import TokenTextSplitter
+
+from rags import global_settings
+from rags.chunks.abstract_splitter import AbstractTextSplitter, TextChunk
 
 # only defaults are defined here, actual values can be passed during initialization or taken from global settings
 DEFAULT_OVERLAP = 1000
