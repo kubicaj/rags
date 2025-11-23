@@ -42,3 +42,8 @@ This project utilizes GitHub Actions for continuous integration. The workflows a
 `.github/workflows` directory. These workflows automate tasks such as running tests, linting code
 
 Note: Deployment not used yet.
+
+## Possible enhancements
+
+- Add batch processing of embeddings for improved performance.
+  See [OpenAI official documentation for more details](https://platform.openai.com/docs/guides/batch)

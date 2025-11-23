@@ -11,7 +11,8 @@ dependencies = [
     "PyMuPDF==1.26.6",
     "openai==2.8.1",
     "python-dotenv==1.2.1",
-    "ruff==0.14.6"
+    "ruff==0.14.6",
+    "loguru==0.7.3"
 ]
 
 [tool.ruff]

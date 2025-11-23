@@ -1,4 +1,4 @@
-import logging
+from loguru import logger
 from abc import ABC, abstractmethod
 from copy import deepcopy
 from typing import Any, List
@@ -83,10 +83,6 @@ class AbstractFileSplitter(ABC):
 
         self.token_limit = global_settings.TOKENS_LIMIT
         self.byte_limit = global_settings.BYTES_LIMIT
-
-        # create basic logger
-        self.logger = logging.getLogger(__name__)
-        logging.basicConfig(encoding='utf-8', level=logging.DEBUG)
 
         self.token_splitter = None
         if include_token_limit:
@@ -253,16 +249,18 @@ class AbstractFileSplitter(ABC):
 
         # per each chunk print its metadata
         for chunk in list_of_chunks:
-            self.logger.debug(f"Chunk metadata: {chunk.metadata}")
+            logger.debug(f"Chunk metadata: {chunk.metadata}")
 
         # calculate total chunks tokens and bytes
         total_tokens = sum(chunk.metadata[self.NUM_TOKENS_KEY] for chunk in list_of_chunks)
         total_bytes = sum(chunk.metadata[self.NUM_BYTES_KEY] for chunk in list_of_chunks)
-        self.logger.info(
+        logger.info(
+            f"\n"
             f"====================================================================\n"
             f"Summary for file: {self.path_to_file} \n"
             f"    Total chunks created for file: {len(list_of_chunks)}, \n"
             f"    Total tokens: {total_tokens}, \n"
             f"    Total bytes: {total_bytes}\n"
-            f"====================================================================")
+            f"===================================================================="
+            f"\n")
         return list_of_chunks

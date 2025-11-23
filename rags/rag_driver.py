@@ -1,9 +1,10 @@
-import logging
+from loguru import logger
 import os
 from typing import List, Literal
 
 from rags.chunks.abstract_splitter import AbstractFileSplitter, FileChunk
 from rags.chunks.chunks_splitter_factory import ChunkSplitterFactory
+from rags.common.setup_logger import setup_logger
 from rags.embeddings.embedding_factory import EmbeddingFactory
 
 
@@ -16,10 +17,7 @@ class RagDriver:
         Args:
             embedding_type (Literal["openai"]): The embedding implementation to use. Default is "openai".
         """
-        # create basic logger
-        logging.basicConfig(encoding='utf-8', level=logging.DEBUG)
-        # init other components
-        self.logger = logging.getLogger(__name__)
+        setup_logger()
         self.embedding_instance = EmbeddingFactory.create(embedding_type)
 
 
@@ -54,7 +52,7 @@ class RagDriver:
         if file_type in allowed_file_types:
             file_to_process.append(file_path)
         else:
-            self.logger.warning("File type %s is not supported and will be skipped.", file_type)
+            logger.warning("File type %s is not supported and will be skipped.", file_type)
 
     def fill_rag(self, source_path: str):
         """
@@ -90,14 +88,14 @@ class RagDriver:
         # create chunks
         result_chunks: List[FileChunk] = []
         for file_path in file_to_process:
-            self.logger.info("Processing file: %s", file_path)
+            logger.info("Processing file: %s", file_path)
             splitter: AbstractFileSplitter = ChunkSplitterFactory.create_based_on_file_type(file_path)
             result_chunks.extend(splitter.create_chunks())
 
         # ------------------------------------------------
         # Step 2 - generate embeddings
         # ------------------------------------------------
-        self.logger.info("Total chunks created: %d", len(result_chunks))
+        logger.info("Total chunks created: %d", len(result_chunks))
         for chunk in result_chunks:
             embedding = self.embedding_instance.embed(chunk.content)
             print(embedding)
