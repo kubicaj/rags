@@ -2,7 +2,10 @@ import os
 from typing import Literal
 
 from rags.vector_database.abstract_vector_database import AbstractVectorDatabase
-from rags.vector_database.s3_vector_bucket_index import S3VectorBucketIndex, S3VectorBucketConfig
+from rags.vector_database.s3_vector_bucket_index import (
+    S3VectorBucketConfig,
+    S3VectorBucketIndex,
+)
 
 
 class VectorDatabaseFactory:

@@ -1,10 +1,13 @@
-from loguru import logger
-
 from dataclasses import dataclass
 from typing import Literal
 
 import boto3
-from rags.vector_database.abstract_vector_database import AbstractVectorDatabase, VectorItem
+from loguru import logger
+
+from rags.vector_database.abstract_vector_database import (
+    AbstractVectorDatabase,
+    VectorItem,
+)
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -76,13 +79,30 @@ class S3VectorBucketIndex(AbstractVectorDatabase):
         )
 
     def query_vectors(self, query_vector: list[float], top_k: int) -> list[dict]:
-        pass
+        """
+        Query the S3 vector bucket index for similar vectors.
+
+        Args:
+            query_vector (list[float]): The query vector to search for similar vectors.
+            top_k (int): The number of top similar vectors to retrieve.
+        """
+        response = self.s3_vector_client.query_vectors(
+            vectorBucketName=self.s3_vector_db_config.bucket_name,
+            indexName=self.s3_vector_db_config.index_name,
+            queryVector={
+                self.s3_vector_db_config.dataType: query_vector
+            },
+            topK=top_k,
+            returnMetadata=True,
+            returnDistance=True
+        )
+        return response.get('vectors', [])
 
     def create_index(self):
         """
         Create the vector index in the S3 vector bucket.
 
-        First check if bucket exists. If not, create it with default encoding settings.
+        First check if bucket exists. If not, create it with default encoding config_files.
         Then create the vector index within the bucket.
         """
         logger.info(f"Creating S3 Vector Bucket Index: {self.s3_vector_db_config.index_name}")
@@ -144,6 +164,21 @@ class S3VectorBucketIndex(AbstractVectorDatabase):
         except self.s3_vector_client.exceptions.NotFoundException:
             logger.warning(
                 f"Vector bucket {self.s3_vector_db_config.bucket_name} does not exist. Skipping index deletion.")
+            return
+
+        # check existence of index, create if not exists else skip deletion
+        try:
+            self.s3_vector_client.get_index(
+                vectorBucketName=self.s3_vector_db_config.bucket_name,
+                indexName=self.s3_vector_db_config.index_name
+            )
+            logger.info(
+                f"Vector index {self.s3_vector_db_config.index_name} exists in bucket "
+                f"{self.s3_vector_db_config.bucket_name}. Going to delete it.")
+        except self.s3_vector_client.exceptions.NotFoundException:
+            logger.info(
+                f"Vector index {self.s3_vector_db_config.index_name} does not exist in bucket "
+                f"{self.s3_vector_db_config.bucket_name}. Skipping deletion of index.")
             return
 
         # Delete vector index logic

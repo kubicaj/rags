@@ -50,3 +50,4 @@ Note: Deployment not used yet.
 
 - Add batch processing of embeddings for improved performance.
   See [OpenAI official documentation for more details](https://platform.openai.com/docs/guides/batch)
+- Add Settings management for better configuration handling and management.

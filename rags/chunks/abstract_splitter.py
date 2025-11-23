@@ -1,9 +1,9 @@
-from loguru import logger
 from abc import ABC, abstractmethod
 from copy import deepcopy
 from typing import Any, List
 
 import tiktoken
+from loguru import logger
 
 from rags import global_settings
 
@@ -75,14 +75,14 @@ class AbstractFileSplitter(ABC):
 
         Args:
             path_to_file (str): Path to the file to be split.
-            include_token_limit (bool): Whether to include token limit from global settings.
-            include_byte_limit (bool): Whether to include byte limit from global settings.
+            include_token_limit (bool): Whether to include token limit from global config_files.
+            include_byte_limit (bool): Whether to include byte limit from global config_files.
         """
         self.path_to_file = path_to_file
         self.encoder = tiktoken.get_encoding(global_settings.TOKENIZER_NAME)
 
-        self.token_limit = global_settings.TOKENS_LIMIT
-        self.byte_limit = global_settings.BYTES_LIMIT
+        self.token_limit = global_settings.EMBEDDING_MODEL_TOKENS_LIMIT
+        self.byte_limit = global_settings.S3_VECTOR_INDEX_METADATA_BYTES_LIMIT
 
         self.token_splitter = None
         if include_token_limit:

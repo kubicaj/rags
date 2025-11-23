@@ -5,17 +5,14 @@ from langchain_text_splitters import TokenTextSplitter
 from rags import global_settings
 from rags.chunks.abstract_splitter import AbstractTextSplitter, TextChunk
 
-# only defaults are defined here, actual values can be passed during initialization or taken from global settings
-DEFAULT_OVERLAP = 1000
-DEFAULT_CHUNK_SIZE = 5000
-
 
 class TokenSplitter(AbstractTextSplitter):
     """
     A text splitter that splits text into chunks based on token limits using LangChain's TokenTextSplitter.
     """
 
-    def __init__(self, chunk_size: int = DEFAULT_CHUNK_SIZE, chunk_overlap: int = DEFAULT_CHUNK_SIZE,
+    def __init__(self, chunk_size: int = global_settings.TOKEN_SPLITTER_DEFAULT_CHUNK_SIZE,
+                 chunk_overlap: int = global_settings.TOKEN_SPLITTER_DEFAULT_CHUNK_OVERLAP,
                  tokenizer_name: str = global_settings.TOKENIZER_NAME):
         """
         Initialize the TokenSplitter with chunk size, overlap, and tokenizer name.
