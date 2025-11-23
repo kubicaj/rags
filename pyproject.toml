@@ -12,7 +12,8 @@ dependencies = [
     "openai==2.8.1",
     "python-dotenv==1.2.1",
     "ruff==0.14.6",
-    "loguru==0.7.3"
+    "loguru==0.7.3",
+    "boto3==1.41.2"
 ]
 
 [tool.ruff]

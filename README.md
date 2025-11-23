@@ -8,6 +8,9 @@ Here you can see the environment variables used in this repository. You can set 
 your environment.
 
 - `OPENAI_API_KEY`: Your OpenAI API key for accessing OpenAI services.
+- `AWS_ACCESS_KEY_ID`: Your AWS access key ID for accessing AWS services.
+- `AWS_SECRET_ACCESS_KEY`: Your AWS secret access key for accessing AWS services.
+- `AWS_REGION`: The AWS region where your services are hosted (e.g., `us-east-1`).
 
 ## Support tools for this project
 
