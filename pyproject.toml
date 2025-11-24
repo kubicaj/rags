@@ -13,11 +13,12 @@ dependencies = [
     "python-dotenv==1.2.1",
     "ruff==0.14.6",
     "loguru==0.7.3",
-    "boto3==1.41.2"
+    "boto3==1.41.2",
+    "pytest==9.0.1",
+    "pytest-mock==3.15.1"
 ]
 
 [tool.ruff]
-include = ["pyproject.toml", "rags/**/*.py"]
 # Exclude a variety of commonly ignored directories.
 exclude = [
     ".bzr",
