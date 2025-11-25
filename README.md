@@ -16,7 +16,7 @@ rags/
 │   ├── pdf_chunk_splitter/               # PDF-specific chunking
 │   └── string_splitters/                 # Generic string-based chunking
 │
-├── vector_database/ # Vector storage/search abstractions & backends
+├── vector_database/                      # Vector storage/search abstractions & backends
 │   ├── abstract_vector_database.py
 │   └── (e.g., s3_vector_bucket.py)       # Example vector DB backend implementation
 │   └── vector_database_factory.py        # Factory to create vector DB instances based on configuration
@@ -26,7 +26,7 @@ rags/
 │   └── (e.g., open_ai_embedding.py)      # Example embedding model implementation
 │   └── embedding_factory.py              # Factory to create embedding model instances
 │
-├── common/          # Shared utilities
+├── common/                               # Shared utilities
 │   └── setup_logger.py
 │
 ├── global_settings.py                    # Core configuration/constants
@@ -144,7 +144,6 @@ Before do not forget to setup environment variables
    for result in results:
        print(result)
    ```
-
 ---
 
 ## Possible Enhancements
