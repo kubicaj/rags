@@ -1,0 +1,64 @@
+# ----------------------------- scan workflow ----------------------------------
+# This workflow performs basic quality checks on the project for every push
+# and pull request targeting the main branch. It uses the `uv` package manager
+# and the project's pyproject.toml for dependency management and does the
+# following:
+#
+# 1. Checks out the repository source code.
+# 2. Sets up a Python environment.
+# 3. Installs `uv` and adds it to the PATH.
+# 4. Installs all project dependencies with `uv sync`.
+# 5. Runs Ruff linting on the ./rags directory.
+# 6. Runs Ruff linting on the ./tests directory.
+# 7. Runs the unit tests via `uv run pytest`.
+# ------------------------------------------------------------------------------
+
+name: scan
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out the repository so the workflow can access the code
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      # Step 2: Set up the Python version used by the project
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      # Step 3: Install the uv package manager and ensure its bin dir is on PATH
+      - name: Install uv
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      # Step 4: Install all project dependencies from pyproject.toml using uv
+      - name: Install project dependencies (uv)
+        run: |
+          uv sync
+
+      # Step 5: Run Ruff to lint the Python code in the ./rags directory
+      - name: Run ruff on rags (uv)
+        run: |
+          uv run ruff check ./rags
+
+      # Step 6: Run Ruff to lint the Python code in the ./tests directory
+
+      - name: Run ruff on tests (uv)
+        run: |
+          uv run ruff check ./tests
+
+      # Step 7: Run the unit test suite using pytest via uv
+      - name: Run unit tests (uv + pytest)
+        run: |
+          uv run pytest
